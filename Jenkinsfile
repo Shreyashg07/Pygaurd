@@ -1,21 +1,36 @@
 pipeline {
     agent any
 
+    environment {
+        TARGET_REPO = "https://github.com/Shreyashg07/malicious1.git"
+        TARGET_BRANCH = "main"
+    }
+
     stages {
 
-        stage('Checkout Code') {
+        stage('Checkout Scanner Code') {
             steps {
-                git branch: 'main', url: 'https://github.com/Shreyashg07/malicious1'
+                echo "📥 Jenkins has already checked out the scanner repository"
             }
         }
 
-        stage('Setup Python Environment') {
+        stage('Clone Target Repository') {
             steps {
                 sh '''
-                python3 -m venv venv
-                . venv/bin/activate
-                pip install --upgrade pip
-                pip install -r requirements.txt
+                echo "📥 Cloning target repository"
+                rm -rf target_repo
+                git clone -b ${TARGET_BRANCH} ${TARGET_REPO} target_repo
+                '''
+            }
+        }
+
+        stage('Install Python Dependencies') {
+            steps {
+                sh '''
+                echo "🐍 Installing Python dependencies"
+                python3 --version
+                pip3 install --user --upgrade pip
+                pip3 install --user -r requirements.txt
                 '''
             }
         }
@@ -23,25 +38,25 @@ pipeline {
         stage('Run ML Security Scan') {
             steps {
                 sh '''
-                . venv/bin/activate
-                python pyguard_embedding.py 
+                echo "🔍 Running ML-based security scan"
+                python3 pyguard_embedding.py target_repo
                 '''
             }
         }
 
         stage('Build (Only if Clean)') {
             steps {
-                echo "✅ Build allowed — code passed security scan"
+                echo "✅ Build allowed — code passed ML security scan"
             }
         }
     }
 
     post {
         failure {
-            echo "🚫 Pipeline blocked due to malicious code detection"
+            echo "🚫 PIPELINE BLOCKED — Malicious or suspicious code detected"
         }
         success {
-            echo "🎉 Pipeline passed security checks"
+            echo "🎉 PIPELINE PASSED — Repository is clean"
         }
     }
 }
