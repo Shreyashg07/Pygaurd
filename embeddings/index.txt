@@ -1,0 +1,8 @@
+model: all-MiniLM-L6-v2
+total_samples: 337
+backdoors: 34
+ci_attacks: 241
+docker_attacks: 25
+miners: 5
+obfuscated: 13
+reverse_shells: 19
