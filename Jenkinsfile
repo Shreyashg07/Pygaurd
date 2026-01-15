@@ -24,7 +24,7 @@ pipeline {
             steps {
                 sh '''
                 . venv/bin/activate
-                python pyguard_embedding.py .
+                python pyguard_embedding.py 
                 '''
             }
         }
