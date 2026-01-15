@@ -8,12 +8,6 @@ pipeline {
 
     stages {
 
-        stage('Checkout Scanner Code') {
-            steps {
-                echo "📥 Jenkins has already checked out the scanner repository"
-            }
-        }
-
         stage('Clone Target Repository') {
             steps {
                 sh '''
@@ -29,8 +23,8 @@ pipeline {
                 sh '''
                 echo "🐍 Installing Python dependencies"
                 python3 --version
-                pip3 install --user --upgrade pip
-                pip3 install --user -r requirements.txt
+                pip3 install --upgrade pip --break-system-packages
+                pip3 install -r requirements.txt --break-system-packages
                 '''
             }
         }
