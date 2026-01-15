@@ -15,7 +15,7 @@ pipeline {
                 python3 -m venv venv
                 . venv/bin/activate
                 pip install --upgrade pip
-                pip install -r backend/scanner/requirements.txt
+                pip install -r requirements.txt
                 '''
             }
         }
@@ -24,7 +24,7 @@ pipeline {
             steps {
                 sh '''
                 . venv/bin/activate
-                python backend/scanner/scan.py .
+                python pyguard_embedding.py .
                 '''
             }
         }
